@@ -4,6 +4,7 @@ from discord.ext import commands
 from discord import Intents
 import random
 import requests
+import pandas as pd
 
 client = commands.AutoShardedBot(command_prefix=os.environ['PREFIX'],intents=Intents.all())
 
@@ -20,25 +21,42 @@ async def on_ready():
 async def ping(ctx):
   await ctx.send('Pong!')
 
+
+
+def verify_user(name, year):
+  data = pd.read_csv("data.csv")
+  df2 = data['Name'].str.contains(name, na=False, case=False)
+  return df2.eq(True).all()
+
 @client.event
 async def on_member_join(member):
-    await client.send_message(member, """
-Welcome to the IMSA Alumni Association Discord server. 
+    await member.send("""
+  Welcome to the IMSA Alumni Association Discord server. 
 To get access to the server, please provide the first and last name you had at IMSA, and your Class Year.
 
 For example, if John Doe graduated in 2003, send the following message:
 
 `John Doe, 2003`
 
-""")
-    m = await client.wait_for_message(author=member, channel=member)
+  """)
+    m = await client.wait_for('message')
     ny = m.content.split(',')
-    print(ny)
-    if m.content == 'key':
-        # give the user the role
-        await client.send_message(member, 'Role added')
-    else:
-        await client.send_message(member, 'Incorrect key')
+    name = ""
+    year = 0
+    try:
+      name = ny[0].strip()
+      year = int(ny[1].strip())
+    except:
+      await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. You will now be removed from the server. Goodbye!")
+      await member.guild.kick(member)
+      return
 
-# refreshCache.start()
+    if verify_user(name, year):
+      await member.send("Welcome {}! You have been verified.".format(name))
+    else:
+      await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. You will now be removed from the server. Goodbye!")
+      await member.guild.kick(member)
+
+
+
 client.run(token)
