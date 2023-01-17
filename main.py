@@ -2,8 +2,6 @@ import discord
 import os
 from discord.ext import commands
 from discord import Intents
-import random
-import requests
 import pandas as pd
 
 client = commands.AutoShardedBot(command_prefix=os.environ['PREFIX'],intents=Intents.all())
