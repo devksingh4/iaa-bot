@@ -93,17 +93,15 @@ For example, if John Timothy Doe graduated in 2003, send the following message:
       name = ny[0].strip()
       year = int(ny[1].strip())
     except:
-      await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. You will now be removed from the server. Goodbye!")
-      await member.guild.kick(member)
+      await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. Or, enter the same information in the verification channel and an admin will attempt to verify you manually. Goodbye!")
       return
 
     if verify_user(name, year):
       await member.send("Welcome {}! You have been verified.".format(name))
       assign_roles(member)
     else:
-      await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. You will now be removed from the server. Goodbye!")
-      await member.guild.kick(member)
-
+      await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. Or, enter the same information in the verification channel and an admin will attempt to verify you manually. Goodbye!")
+      return
 
 
 client.run(token)
