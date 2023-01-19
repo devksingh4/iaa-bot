@@ -22,7 +22,7 @@ async def ping(ctx):
 
 
 def verify_user(name, year):
-  data = pd.read_csv("data.csv",  encoding='latin-1')
+  data = pd.read_csv("./data/data.csv",  encoding='latin-1')
   data['OurName'] = (data['First Name'] + ' ' + data['Last Name']).str.lower()
   d = dict(zip(data['OurName'], data['Year']))
   try:
