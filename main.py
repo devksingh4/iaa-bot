@@ -70,9 +70,6 @@ def get_guild_mappings():
     "2024": "1061465226278600745",
   }
 
-def assign_roles(member, year):
-  mappings = get_guild_mappings()
-  member.add_roles([mappings[str(year)]], reason="Verified as IMSA Alum, Class of {}".format(str(year)))
 
 @client.event
 async def on_member_join(member):
@@ -86,6 +83,8 @@ For example, if John Timothy Doe graduated in 2003, send the following message:
 
   """)
     m = await client.wait_for('message')
+    if m.guild:
+      return
     ny = m.content.split(',')
     name = ""
     year = 0
@@ -97,8 +96,10 @@ For example, if John Timothy Doe graduated in 2003, send the following message:
       return
 
     if verify_user(name, year):
+      mappings = get_guild_mappings()
+      role = discord.utils.get(member.guild.roles, id=int(mappings[str(year)]))
+      await member.add_roles(role, reason="Verified as IMSA Alum")
       await member.send("Welcome {}! You have been verified.".format(name))
-      assign_roles(member, year)
     else:
       await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. Or, enter the same information in the verification channel and an admin will attempt to verify you manually. Goodbye!")
       return
