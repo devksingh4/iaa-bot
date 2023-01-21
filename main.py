@@ -98,7 +98,7 @@ For example, if John Timothy Doe graduated in 2003, send the following message:
 
     if verify_user(name, year):
       await member.send("Welcome {}! You have been verified.".format(name))
-      assign_roles(member)
+      assign_roles(member, year)
     else:
       await member.send("You could not be verified. If you believe this is an error, please rejoin the server and try again. Or, enter the same information in the verification channel and an admin will attempt to verify you manually. Goodbye!")
       return
